@@ -21,9 +21,10 @@ import datastructures.WholeStoryDTO;
 import datastructures.post.CompletePostDTO;
 import datastructures.post.Post;
 import datastructures.post.PostBody;
+import db.DbMapper;
 import util.StatusMonitor;
 
-public class MyNeo4jMapper {
+public class MyNeo4jMapper implements DbMapper {
 
 	private Neo4jConnector connector = new Neo4jConnector();
 	private Neo4jUtil util = new Neo4jUtil();
@@ -100,8 +101,8 @@ public class MyNeo4jMapper {
 		if (limit >= 9999)
 			logger.warn("Very heavy request. Stop being a dick.");
 
-		Long oneHourBack=System.currentTimeMillis()-(1000*60*60*60);
-		StatementResult result = s.run(query.getPostsLimitHeavyQuery(skip, limit,oneHourBack));
+		Long oneHourBack=System.currentTimeMillis()-(1000*60*60*60*24*7);
+		StatementResult result = s.run(query.getPostsLimitQuery(skip, limit,oneHourBack));
 
 		List<CompletePostDTO> completeList = new ArrayList<CompletePostDTO>();
 
@@ -124,7 +125,6 @@ public class MyNeo4jMapper {
 		Session s = connector.getSession();
 
 		StatementResult result = s.run(query.upVote(hanesst_id));
-		//List<PostBody> list = util.castMultiplePostNodesToList(result);
 
 		s.close();
 	}
@@ -133,7 +133,6 @@ public class MyNeo4jMapper {
 		Session s = connector.getSession();
 
 		StatementResult result = s.run(query.downVote(hanesst_id));
-		//List<PostBody> list = util.castMultiplePostNodesToList(result);
 
 		s.close();
 	}
@@ -141,7 +140,7 @@ public class MyNeo4jMapper {
 	public List<PostBody> getPostsLimit(int skip, int limit) {
 		Session s = connector.getSession();
 
-		StatementResult result = s.run(query.getPostsLimitQuery(skip,limit));
+		StatementResult result = s.run(query.getPostsLimit2Query(skip,limit));
 		List<PostBody> list = util.castMultiplePostNodesToList(result);
 
 		s.close();
@@ -232,5 +231,13 @@ public class MyNeo4jMapper {
 
 		s.close();
 		return null;
+	}
+	
+	public void updateRetroKarma(Integer from, Integer to) {
+		Session s = connector.getSession();
+
+		StatementResult result = s.run(query.updateKarma(from, to));
+
+		s.close();
 	}
 }

@@ -1,7 +1,6 @@
 package api;
 
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,6 +22,7 @@ import datastructures.User;
 import datastructures.WholeStoryDTO;
 import datastructures.post.CompletePostDTO;
 import datastructures.post.PostBody;
+import db.DbMapper;
 import db.neo4j.MyNeo4jMapper;
 import io.prometheus.client.Summary;
 import io.prometheus.client.exporter.MetricsServlet;
@@ -34,7 +34,7 @@ import util.StatusMonitor;
 @RestController
 public class Api {
 
-	private MyNeo4jMapper mapper = new MyNeo4jMapper();
+	private DbMapper mapper = new MyNeo4jMapper();
 	private JSONMapper jsonmap = new JSONMapper();
 	private ApiUtil util = new ApiUtil();
 	private ExecutorService threads = Executors.newCachedThreadPool();
@@ -51,36 +51,6 @@ public class Api {
 		return "java call";
 	}
 
-	// @RequestMapping(path = "/post", method = RequestMethod.POST)
-	// public ResponseEntity<String> post(@RequestBody String json) {
-	// if (StatusMonitor.isOperational()) {
-	// Summary.Timer requestTimer = StatusMonitor.getRequestlatency().startTimer();
-	// StatusMonitor.incrementCounter();
-	//
-	// PostBody post = jsonmap.jsonToType(PostBody.class, json);
-	// if (!util.validatePost(post)) {
-	// requestTimer.observeDuration();
-	// logger.warn("This request is wrong: "+json);
-	// return ResponseEntity.status(400).body("Request is invalid. Check Hanesst_id,
-	// post_parent, "
-	// + "post_title, post_type, pwd_hash and username ");
-	// }
-	// post.setTimestamp(System.currentTimeMillis());
-	//
-	// mapper.persistPost(post);
-	//
-	// logger.info("Created post with "+post.getPost_title()+" title and
-	// "+post.getHanesst_id()+" id");
-	//
-	// String methodName =
-	// Thread.currentThread().getStackTrace()[1].getMethodName();
-	// checkSpeed(requestTimer.observeDuration(),methodName, json);
-	// return ResponseEntity.status(201).body((post.getPost_parent() + " " +
-	// post.getPost_url() + " " + post.getUsername() + " "
-	// + StatusMonitor.getLastPostId()));
-	// }
-	// return ResponseEntity.status(423).body("Application is under update");
-	// }
 
 	@RequestMapping(path = "/post", method = RequestMethod.POST)
 	public ResponseEntity<String> post2(@RequestBody String json) {

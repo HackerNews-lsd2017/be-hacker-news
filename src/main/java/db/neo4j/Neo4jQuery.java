@@ -38,18 +38,19 @@ public class Neo4jQuery {
 		return "match (p:Post) where p.hanesst_id="+hanesst_id+" set p.karma=p.karma-1 ;";
 	}
 	
-	public String getPostsLimitQuery(Integer skip, Integer limit) {
+	public String getPostsLimit2Query(Integer skip, Integer limit) {
 		return " Match (par:Post{post_parent:-1}) with par ORDER BY par.timestamp desc skip (30*"+skip+") limit "+limit+" return par";
 	}
 	// Match (par:Post{post_parent:-1}) where par.timestamp>1512916759 with par ORDER BY par.timestamp desc skip 60 limit 10 with par return par as post, size((par)-[:Parent *1..]->()) as numberOfcomments;;
 	// Match (par:Post{post_parent:-1}) return par skip (30*2) limit 10;
-	//Right One
-	public String getPostsLimitHeavyQuery(Integer skip, Integer limit, Long timeLimit) {
+	
+	public String getPostsLimitQuery(Integer skip, Integer limit, Long timeLimit) {
 
 		return "Match (par:Post{post_parent:-1}) where par.timestamp>"+timeLimit+" \n" + 
 				"       with par skip (30*"+skip+") limit "+limit+"\n" + 
 				"       with par\n" + 
 				"        return par as post, size((par)-[:Parent *1..]->()) as numberOfcomments;";
+		
 //		return "Match (par:Post{post_parent:-1}) \n" + 
 //		"       with par ORDER BY par.timestamp desc skip (30*"+skip+") limit "+limit+"\n" + 
 //		"       with par\n" + 
@@ -83,5 +84,9 @@ public class Neo4jQuery {
 		return "MATCH (idc:IdCounter)\n" + 
 				"SET idc.counter=idc.counter-1 \n" + 
 				"RETURN idc.counter as id;";
+	}
+	
+	public String updateKarma(Integer from, Integer to) {
+		return "match (p:Post) where p.hanesst_id>="+from+" and p.hanesst_id<="+to+" set p.karma=toInteger(rand()*1500) ;";
 	}
 }
