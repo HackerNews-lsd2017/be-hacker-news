@@ -100,9 +100,12 @@ public class MyNeo4jMapper implements DbMapper {
 		Session s = connector.getSession();
 		if (limit >= 9999)
 			logger.warn("Very heavy request. Stop being a dick.");
+		Long timeInterval = (1000L*60*60*24*7*5);
 
-		Long oneHourBack=System.currentTimeMillis()-(1000*60*60*60*24*7);
-		StatementResult result = s.run(query.getPostsLimitQuery(skip, limit,oneHourBack));
+		Long oneMonthBack=(System.currentTimeMillis()-timeInterval);
+		StatementResult result = s.run(query.getPostsLimitQuery(skip, limit,oneMonthBack));
+		System.out.println(oneMonthBack);
+		System.out.println(System.currentTimeMillis());
 
 		List<CompletePostDTO> completeList = new ArrayList<CompletePostDTO>();
 

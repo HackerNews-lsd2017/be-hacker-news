@@ -3,24 +3,16 @@ package garbage.test;
 import java.util.Random;
 
 import datastructures.post.PostBody;
-import db.neo4j.MyNeo4jMapper;
 
 public class Main {
 
 	
 	public static void main(String[] args) throws InterruptedException {
-		MyNeo4jMapper mapper = new MyNeo4jMapper();
-
-		//mapper.getComments(445);
-		for (int i=-10000;i<=12000000;i=i+40000) {
-			mapper.updateRetroKarma(i, i+40000);
-			Thread.sleep(2000);
-			System.out.println("Current batch: "+i+"->"+i+40000);
-		}
-		
-
-		//System.out.println(mapper.editUser("pg", "lol6", "lol7"));
-		
+		Long timeInterval = (1000L*60*60*24*7*5);
+		Long oneMonthBack=(System.currentTimeMillis()-timeInterval);
+		System.out.println(System.currentTimeMillis());
+		System.out.println(oneMonthBack);
+		System.out.println(timeInterval);
 
 	}
 	
