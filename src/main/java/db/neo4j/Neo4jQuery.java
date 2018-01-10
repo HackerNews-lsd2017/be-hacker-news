@@ -47,7 +47,7 @@ public class Neo4jQuery {
 	public String getPostsLimitQuery(Integer skip, Integer limit, Long timeLimit) {
 
 		return "Match (par:Post{post_parent:-1}) where par.timestamp>"+timeLimit+" \n" + 
-				"       with par skip (30*"+skip+") limit "+limit+"\n" + 
+				"       with par order by par.timestamp desc skip (30*"+skip+") limit "+limit+"\n" + 
 				"       with par\n" + 
 				"        return par as post, size((par)-[:Parent *1..]->()) as numberOfcomments;";
 		
